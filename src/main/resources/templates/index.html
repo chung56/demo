@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Searching</title>
+</head>
+<body>
+<h1>Searching word</h1>
+
+<!-- Formulář pro zadání vyhledávacího dotazu -->
+<form th:action="@{/search}" method="post" th:object="${searchQuery}">
+  <label for="query">Type the key word:</label>
+  <input type="text" id="query" th:field="*{query}" required />
+  <button type="submit">Find</button>
+</form>
+
+<!-- Zobrazení výsledků, pokud jsou k dispozici -->
+<div th:if="${results != null}">
+  <h2>Searching results:</h2>
+  <ul>
+    <li th:each="result : ${results}" th:text="${result}"></li>
+  </ul>
+
+  <!-- Tlačítko pro export -->
+  <form th:action="@{/export}" method="post">
+    <input type="hidden" name="results" th:value="${results}" />
+    <button type="submit">Export</button>
+  </form>
+</div>
+
+<!-- Zobrazení chyby, pokud existuje -->
+<div th:if="${error != null}">
+  <p th:text="${error}" style="color: red;"></p>
+</div>
+
+<!-- Zobrazení zprávy o exportu -->
+<div th:if="${exportMessage != null}">
+  <p th:text="${exportMessage}" style="color: green;"></p>
+</div>
+
+</body>
+</html>
