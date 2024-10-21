@@ -4,7 +4,7 @@ FROM maven:3.8.1-openjdk-17 AS build
 # Set the working directory
 WORKDIR /app
 
-# Copy the pom.xml and any other necessary files first
+# Copy the pom.xml and source files
 COPY pom.xml .
 COPY src ./src
 
