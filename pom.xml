@@ -57,6 +57,11 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version> <!-- Nebo 3.11.0, pokud chcete použít novější -->
+				<configuration>
+					<source>17</source> <!-- Zdrojová verze Javy -->
+					<target>17</target> <!-- Cílová verze Javy -->
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
