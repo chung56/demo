@@ -46,8 +46,7 @@ public class SearchController {
 
   @PostMapping("/export")
   public String createCsvFile(@RequestParam("results") String resultsString, @ModelAttribute("searchQuery") SearchQuery searchQuery, Model model) {
-    String desktopPath = System.getProperty("user.home") + "/Desktop";
-    String csvFilePath = desktopPath + "/results.csv";
+    String csvFilePath = System.getProperty("java.io.tmpdir") + "/results.csv";
 
     List<String> results = Arrays.asList(resultsString.split(","));
 
