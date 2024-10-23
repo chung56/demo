@@ -2,10 +2,15 @@ package com.example.demo.controller;
 
 import com.example.demo.model.SearchQuery;
 import com.example.demo.service.SearchService;
+import java.io.ByteArrayInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,22 +49,29 @@ public class SearchController {
     return "index";
   }
 
-  @PostMapping("/export")
-  public String createCsvFile(@RequestParam("results") String resultsString, @ModelAttribute("searchQuery") SearchQuery searchQuery, Model model) {
-    String desktopPath = System.getProperty("user.home") + "/Desktop";
-    String csvFilePath = desktopPath + "/results.csv";
-
+  @PostMapping("/download")
+  public ResponseEntity<InputStreamResource> exportCsv(@RequestParam("results") String resultsString) {
     List<String> results = Arrays.asList(resultsString.split(","));
 
-    try (FileWriter fileWriter = new FileWriter(csvFilePath)) {
-      for (String result : results) {
-        fileWriter.write(result + "\n");
-      }
-      model.addAttribute("exportMessage", "Export successful! File results.csv has been saved in desktop.");
-    } catch (IOException e) {
-      e.printStackTrace();
-      model.addAttribute("error", "Export not successful!");
+    StringBuilder csvData = new StringBuilder();
+    for (String result : results) {
+      csvData.append(result).append("\n");
     }
-    return "index"; // Redirect back to the index page
+
+    try {
+      // Create InputStreamResource from StringBuilder data
+      InputStreamResource fileInputStream = new InputStreamResource(
+          new ByteArrayInputStream(csvData.toString().getBytes())
+      );
+
+      // Return the CSV as a downloadable file
+      return ResponseEntity.ok()
+          .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=results.csv")
+          .contentType(MediaType.parseMediaType("text/csv"))
+          .body(fileInputStream);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.internalServerError().build();
+    }
   }
 }

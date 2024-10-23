@@ -22,9 +22,9 @@
   </ul>
 
   <!-- Tlačítko pro export -->
-  <form th:action="@{/export}" method="post">
+  <form th:action="@{/download}" method="post">
     <input type="hidden" name="results" th:value="${results}" />
-    <button type="submit">Export</button>
+    <button type="submit">Download results</button>
   </form>
 </div>
 
