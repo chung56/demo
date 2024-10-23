@@ -46,7 +46,8 @@ public class SearchController {
 
   @PostMapping("/export")
   public String createCsvFile(@RequestParam("results") String resultsString, @ModelAttribute("searchQuery") SearchQuery searchQuery, Model model) {
-    String csvFilePath = System.getProperty("java.io.tmpdir") + "/results.csv";
+    String desktopPath = System.getProperty("user.home") + "/Desktop";
+    String csvFilePath = desktopPath + "/results.csv";
 
     List<String> results = Arrays.asList(resultsString.split(","));
 
@@ -54,7 +55,7 @@ public class SearchController {
       for (String result : results) {
         fileWriter.write(result + "\n");
       }
-      model.addAttribute("exportMessage", "Export successful! File results.csv has been saved.");
+      model.addAttribute("exportMessage", "Export successful! File results.csv has been saved in desktop.");
     } catch (IOException e) {
       e.printStackTrace();
       model.addAttribute("error", "Export not successful!");
